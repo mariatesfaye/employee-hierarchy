@@ -1,0 +1,31 @@
+<div class="page">
+  <div class="header">
+    <h2>Perago — Positions</h2>
+    <button nz-button nzType="primary" (click)="openCreate()">Create Position</button>
+  </div>
+
+  <nz-tree
+    [nzData]="nodes"
+    nzBlockNode
+    (nzClick)="onNodeClick($event)"
+    [nzExpandAll]="true">
+  </nz-tree>
+
+  <nz-drawer
+    [nzVisible]="drawerVisible"
+    nzPlacement="right"
+    [nzTitle]="isNew ? 'Create Position' : (selectedPosition?.name || 'Position')"
+    (nzOnClose)="closeDrawer()"
+    [nzWidth]="420">
+
+    <div *nzDrawerContent>
+      <app-position-form
+        [position]="selectedPosition"
+        [allPositions]="positions"
+        (saved)="onSaved()"
+        (deleted)="onDeleted()">
+      </app-position-form>
+    </div>
+
+  </nz-drawer>
+</div>

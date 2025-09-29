@@ -1,0 +1,85 @@
+.page {
+  padding: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.header h2 {
+  margin: 0;
+  color: #262626;
+  font-weight: 600;
+  font-size: 24px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background: #fafafa;
+  border-radius: 8px;
+  border: 1px dashed #d9d9d9;
+  margin: 20px 0;
+}
+
+/* Tree styling */
+nz-tree {
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
+  min-height: 400px;
+}
+
+/* Tree node customization */
+::ng-deep .ant-tree-node-content-wrapper {
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+::ng-deep .ant-tree-node-content-wrapper:hover {
+  background-color: #f5f5f5;
+}
+
+::ng-deep .ant-tree-node-selected {
+  background-color: #e6f7ff !important;
+}
+
+/* Drawer customization */
+::ng-deep .ant-drawer-body {
+  padding: 24px;
+}
+
+/* Button spacing */
+button[nz-button] {
+  margin-bottom: 8px;
+}
+
+/* Loading state */
+nz-spin {
+  display: block;
+  min-height: 400px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  
+  .header h2 {
+    font-size: 20px;
+  }
+  
+  nz-tree {
+    padding: 12px;
+  }
+}

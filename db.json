@@ -1,0 +1,124 @@
+{
+  "positions": [
+    {
+      "id": "1",
+      "name": "CEO",
+      "description": "Chief Executive Officer",
+      "parentId": null
+    },
+    {
+      "id": "2",
+      "name": "CTO",
+      "description": "Chief Technology Officer",
+      "parentId": 1
+    },
+    {
+      "id": "3",
+      "name": "Project Manager",
+      "description": "PM",
+      "parentId": 2
+    },
+    {
+      "id": "4",
+      "name": "Product Owner",
+      "description": "PO",
+      "parentId": 3
+    },
+    {
+      "id": "5",
+      "name": "Tech Lead",
+      "description": "Tech Lead",
+      "parentId": 4
+    },
+    {
+      "id": "6",
+      "name": "Frontend Developer",
+      "description": "Frontend",
+      "parentId": 5
+    },
+    {
+      "id": "7",
+      "name": "Backend Developer",
+      "description": "Backend",
+      "parentId": 5
+    },
+    {
+      "id": "8",
+      "name": "DevOps Engineer",
+      "description": "DevOps",
+      "parentId": 5
+    },
+    {
+      "id": "9",
+      "name": "QA Engineer",
+      "description": "QA",
+      "parentId": 4
+    },
+    {
+      "id": "10",
+      "name": "CFO",
+      "description": "Chief Financial Officer",
+      "parentId": 1
+    },
+    {
+      "id": "11",
+      "name": "Chief Accountant",
+      "description": "Chief Accountant",
+      "parentId": 10
+    },
+    {
+      "id": "12",
+      "name": "Financial Analyst",
+      "description": "FA",
+      "parentId": 11
+    },
+    {
+      "id": "13",
+      "name": "Account & Payable",
+      "description": "A/P",
+      "parentId": 11
+    },
+    {
+      "id": "14",
+      "name": "Internal Audit",
+      "description": "Audit",
+      "parentId": 10
+    },
+    {
+      "id": "15",
+      "name": "COO",
+      "description": "Chief Operating Officer",
+      "parentId": 1
+    },
+    {
+      "id": "16",
+      "name": "HR",
+      "description": "Human Resources",
+      "parentId": 1
+    },
+    {
+      "id": "a5e1",
+      "name": "lens",
+      "description": "test",
+      "parentId": "1"
+    },
+    {
+      "id": "4964",
+      "name": "biz",
+      "description": "test2",
+      "parentId": "a5e1"
+    },
+    {
+      "id": "6bda",
+      "name": "test",
+      "description": "for test",
+      "parentId": null
+    },
+    {
+      "id": "f865",
+      "name": "fortest2",
+      "description": "test3",
+      "parentId": "4964"
+    }
+  ]
+}

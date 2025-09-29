@@ -1,0 +1,70 @@
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.left-actions, .right-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-hint {
+  color: #8c8c8c;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+nz-form-item {
+  margin-bottom: 20px;
+}
+
+/* Form input styling */
+nz-input, nz-textarea, nz-select {
+  width: 100%;
+}
+
+/* Error styling */
+.input-error {
+  border-color: #ff4d4f !important;
+}
+
+.error-message {
+  color: #ff4d4f;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.text-warning {
+  color: #faad14;
+  font-size: 14px;
+  margin: 8px 0;
+}
+
+/* Form labels */
+nz-form-label {
+  font-weight: 500;
+  color: #262626;
+}
+
+/* Button styling */
+button[nz-button] {
+  min-width: 100px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .actions {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .left-actions, .right-actions {
+    justify-content: center;
+  }
+}
