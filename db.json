@@ -1,124 +1,70 @@
 {
   "positions": [
     {
-      "id": "1",
+      "id": "a121",
       "name": "CEO",
       "description": "Chief Executive Officer",
       "parentId": null
     },
     {
-      "id": "2",
+      "id": "c770",
       "name": "CTO",
       "description": "Chief Technology Officer",
-      "parentId": 1
+      "parentId": "a121"
     },
     {
-      "id": "3",
+      "id": "fcc7",
       "name": "Project Manager",
       "description": "PM",
-      "parentId": 2
+      "parentId": "c770"
     },
     {
-      "id": "4",
+      "id": "eb6c",
       "name": "Product Owner",
       "description": "PO",
-      "parentId": 3
+      "parentId": "fcc7"
     },
     {
-      "id": "5",
+      "id": "b297",
       "name": "Tech Lead",
-      "description": "Tech Lead",
-      "parentId": 4
+      "description": "tech lead",
+      "parentId": "eb6c"
     },
     {
-      "id": "6",
+      "id": "8182",
       "name": "Frontend Developer",
       "description": "Frontend",
-      "parentId": 5
+      "parentId": "b297"
     },
     {
-      "id": "7",
+      "id": "fe14",
       "name": "Backend Developer",
       "description": "Backend",
-      "parentId": 5
+      "parentId": "8182"
     },
     {
-      "id": "8",
+      "id": "8523",
       "name": "DevOps Engineer",
       "description": "DevOps",
-      "parentId": 5
+      "parentId": "fe14"
     },
     {
-      "id": "9",
+      "id": "d730",
       "name": "QA Engineer",
       "description": "QA",
-      "parentId": 4
+      "parentId": "8523"
     },
     {
-      "id": "10",
+      "id": "0134",
       "name": "CFO",
       "description": "Chief Financial Officer",
-      "parentId": 1
+      "parentId": "d730"
     },
     {
-      "id": "11",
+      "id": "8c54",
       "name": "Chief Accountant",
-      "description": "Chief Accountant",
-      "parentId": 10
-    },
-    {
-      "id": "12",
-      "name": "Financial Analyst",
-      "description": "FA",
-      "parentId": 11
-    },
-    {
-      "id": "13",
-      "name": "Account & Payable",
-      "description": "A/P",
-      "parentId": 11
-    },
-    {
-      "id": "14",
-      "name": "Internal Audit",
-      "description": "Audit",
-      "parentId": 10
-    },
-    {
-      "id": "15",
-      "name": "COO",
-      "description": "Chief Operating Officer",
-      "parentId": 1
-    },
-    {
-      "id": "16",
-      "name": "HR",
-      "description": "Human Resources",
-      "parentId": 1
-    },
-    {
-      "id": "a5e1",
-      "name": "lens",
-      "description": "test",
-      "parentId": "1"
-    },
-    {
-      "id": "4964",
-      "name": "biz",
-      "description": "test2",
-      "parentId": "a5e1"
-    },
-    {
-      "id": "6bda",
-      "name": "test",
-      "description": "for test",
-      "parentId": null
-    },
-    {
-      "id": "f865",
-      "name": "fortest2",
-      "description": "test3",
-      "parentId": "4964"
+      "description": "Accountant",
+      "parentId": "0134"
     }
   ]
 }

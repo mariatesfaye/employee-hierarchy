@@ -1,34 +1,84 @@
-<form nz-form [formGroup]="form" (ngSubmit)="save()">
-  <nz-form-item>
-    <nz-form-label [nzSpan]="24" nzRequired>Name</nz-form-label>
-    <nz-form-control [nzSpan]="24" [nzErrorTip]="nameErrorTpl">
-      <input nz-input formControlName="name" placeholder="Position name" />
-      <ng-template #nameErrorTpl let-control>
-        <ng-container *ngIf="control.hasError('required')">Name is required</ng-container>
-        <ng-container *ngIf="control.hasError('maxlength')">Name must be less than 150 characters</ng-container>
-      </ng-template>
-    </nz-form-control>
-  </nz-form-item>
+<div class="form-container">
+  <form nz-form [formGroup]="form" (ngSubmit)="save()">
+    
+    <nz-form-item>
+      <nz-form-label nzFor="name" nzRequired>Position Name</nz-form-label>
+      <nz-form-control [nzErrorTip]="nameErrorTpl">
+        <input 
+          nz-input 
+          id="name"
+          formControlName="name" 
+          placeholder="Enter position name" />
+        <ng-template #nameErrorTpl let-control>
+          <div *ngIf="control?.hasError('required')">Position name is required</div>
+          <div *ngIf="control?.hasError('minlength')">Name must be at least 2 characters</div>
+          <div *ngIf="control?.hasError('maxlength')">Name must be less than 150 characters</div>
+        </ng-template>
+      </nz-form-control>
+    </nz-form-item>
 
-  <nz-form-item>
-    <nz-form-label [nzSpan]="24">Description</nz-form-label>
-    <nz-form-control [nzSpan]="24">
-      <textarea nz-input formControlName="description" rows="3"></textarea>
-    </nz-form-control>
-  </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzFor="description">Description</nz-form-label>
+      <nz-form-control>
+        <textarea 
+          nz-input 
+          id="description"
+          formControlName="description" 
+          rows="3"
+          placeholder="Enter position description (optional)"></textarea>
+      </nz-form-control>
+    </nz-form-item>
 
-  <nz-form-item>
-    <nz-form-label [nzSpan]="24">Parent</nz-form-label>
-    <nz-form-control [nzSpan]="24">
-      <nz-select formControlName="parentId" nzAllowClear nzShowSearch nzPlaceHolder="Select parent (or none)">
-        <nz-option *ngFor="let p of getParentOptions()" [nzValue]="p.id" [nzLabel]="p.label"></nz-option>
-      </nz-select>
-    </nz-form-control>
-  </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzFor="parentId">Parent Position</nz-form-label>
+      <nz-form-control>
+        <nz-select 
+          id="parentId"
+          formControlName="parentId" 
+          nzAllowClear 
+          nzShowSearch
+          nzPlaceHolder="Select parent position">
+          <nz-option 
+            *ngFor="let option of getParentOptions()" 
+            [nzValue]="option.id" 
+            [nzLabel]="option.label">
+          </nz-option>
+        </nz-select>
+        <div class="form-hint">Select where this position fits in the organization hierarchy</div>
+      </nz-form-control>
+    </nz-form-item>
 
-  <div class="actions">
-    <button nz-button nzType="primary" [disabled]="loading" type="submit">Save</button>
-    <button nz-button type="button" (click)="$event.preventDefault(); $event.stopPropagation();" style="margin-left:8px;">Cancel</button>
-    <button nz-button nzType="default" *ngIf="position?.id" (click)="$event.preventDefault(); confirmDelete()" type="button" style="float:right;">Delete</button>
-  </div>
-</form>
+    <div class="actions">
+      <div class="left-actions">
+        <button 
+          nz-button 
+          nzType="primary" 
+          [disabled]="loading || form.invalid"
+          [nzLoading]="loading"
+          type="submit">
+          {{ isNew ? 'Create Position' : 'Update Position' }}
+        </button>
+        <button 
+          nz-button 
+          type="button" 
+          (click)="cancel()"
+          [disabled]="loading">
+          Cancel
+        </button>
+      </div>
+
+      <div class="right-actions" *ngIf="showDeleteButton">
+        <button 
+          nz-button 
+          nzType="default" 
+          nzDanger
+          (click)="confirmDelete()"
+          [disabled]="loading"
+          type="button">
+          Delete Position
+        </button>
+      </div>
+    </div>
+
+  </form>
+</div>
