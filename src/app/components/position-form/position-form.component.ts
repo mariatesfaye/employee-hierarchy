@@ -23,7 +23,6 @@ import { CreatePosition, UpdatePosition, DeletePositionWithChildren } from '../.
     NzModalModule
   ],
   templateUrl: './position-form.component.html',
-  styleUrls: ['./position-form.component.css']
 })
 export class PositionFormComponent implements OnChanges {
   @Input() position: Position | null = null;

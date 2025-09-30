@@ -30,7 +30,6 @@ import {
     PositionFormComponent
   ],
   templateUrl: './position-tree.component.html',
-  styleUrls: ['./position-tree.component.css']
 })
 export class PositionTreeComponent implements OnInit, OnDestroy {
   nodes: TreeNode[] = [];
