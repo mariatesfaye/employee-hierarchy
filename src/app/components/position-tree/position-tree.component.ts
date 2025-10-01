@@ -29,7 +29,75 @@ import {
     NzEmptyModule,
     PositionFormComponent
   ],
-  templateUrl: './position-tree.component.html',
+  template: `<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="bg-white rounded-2xl shadow-xl p-6 mb-6 border border-white/20 backdrop-blur-sm">
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            🏢 Employee Hierarchy
+          </h1>
+          <p class="text-gray-600 mt-1">Manage your organization's position structure</p>
+        </div>
+        <button 
+          nz-button 
+          nzType="primary" 
+          (click)="openCreate()"
+          class="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+          ➕ Create Position
+        </button>
+      </div>
+    </div>
+
+    <nz-spin [nzSpinning]="loading">
+      <div class="bg-white rounded-2xl shadow-xl p-6 border border-white/20 backdrop-blur-sm">
+        <nz-tree
+          *ngIf="nodes.length > 0"
+          [nzData]="nodes"
+          nzBlockNode
+          [nzExpandAll]="true"
+          (nzClick)="onNodeClick($event)"
+          class="org-tree">
+        </nz-tree>
+
+        <div *ngIf="nodes.length === 0 && !loading" class="text-center py-12">
+          <div class="text-6xl mb-4">🏢</div>
+          <h3 class="text-xl font-semibold text-gray-700 mb-2">No positions yet</h3>
+          <p class="text-gray-500 mb-6">Start building your organization's hierarchy</p>
+          <button 
+            nz-button 
+            nzType="primary" 
+            (click)="openCreate()"
+            class="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+            Create First Position
+          </button>
+        </div>
+      </div>
+    </nz-spin>
+
+  </div>
+
+  <nz-drawer
+    [nzVisible]="drawerVisible"
+    nzPlacement="right"
+    [nzTitle]="isNew ? 'Create Position' : ('Edit: ' + (selectedPosition?.name || 'Position'))"
+    (nzOnClose)="closeDrawer()"
+    [nzWidth]="500"
+    nzClosable>
+    
+    <div *nzDrawerContent class="h-full">
+      <app-position-form
+        [position]="selectedPosition"
+        [allPositions]="positions"
+        [isNew]="isNew"
+        (saved)="onSaved()"
+        (deleted)="onDeleted()"
+        (cancelled)="closeDrawer()">
+      </app-position-form>
+    </div>
+  </nz-drawer>
+</div>`
 })
 export class PositionTreeComponent implements OnInit, OnDestroy {
   nodes: TreeNode[] = [];

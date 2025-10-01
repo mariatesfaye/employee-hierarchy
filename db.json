@@ -55,16 +55,16 @@
       "parentId": "8523"
     },
     {
-      "id": "0134",
-      "name": "CFO",
-      "description": "Chief Financial Officer",
-      "parentId": "d730"
-    },
-    {
       "id": "8c54",
       "name": "Chief Accountant",
       "description": "Accountant",
-      "parentId": "0134"
+      "parentId": "7fac"
+    },
+    {
+      "id": "7fac",
+      "name": "CFO",
+      "description": "chief finance officer",
+      "parentId": "d730"
     }
   ]
 }
