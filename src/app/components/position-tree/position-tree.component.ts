@@ -29,13 +29,13 @@ import {
     NzEmptyModule,
     PositionFormComponent
   ],
-  template: `<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
+  template: `<div class="min-h-screen bg-gray-50 p-6">
   <div class="max-w-6xl mx-auto">
 
-    <div class="bg-white rounded-2xl shadow-xl p-6 mb-6 border border-white/20 backdrop-blur-sm">
+    <div class="bg-white rounded-lg p-6 mb-6 border border-gray-200">
       <div class="flex justify-between items-center">
         <div>
-          <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          <h1 class="text-2xl font-bold text-gray-800">
             🏢 Employee Hierarchy
           </h1>
           <p class="text-gray-600 mt-1">Manage your organization's position structure</p>
@@ -44,14 +44,14 @@ import {
           nz-button 
           nzType="primary" 
           (click)="openCreate()"
-          class="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+          class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded">
           ➕ Create Position
         </button>
       </div>
     </div>
 
     <nz-spin [nzSpinning]="loading">
-      <div class="bg-white rounded-2xl shadow-xl p-6 border border-white/20 backdrop-blur-sm">
+      <div class="bg-white rounded-lg p-6 border border-gray-200">
         <nz-tree
           *ngIf="nodes.length > 0"
           [nzData]="nodes"
@@ -69,7 +69,7 @@ import {
             nz-button 
             nzType="primary" 
             (click)="openCreate()"
-            class="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded">
             Create First Position
           </button>
         </div>
@@ -113,7 +113,7 @@ export class PositionTreeComponent implements OnInit, OnDestroy {
 
   constructor(
     private store: Store,
-    private msg: NzMessageService
+    private message: NzMessageService
   ) {}
 
   ngOnInit() {
@@ -121,7 +121,6 @@ export class PositionTreeComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(positions => {
         this.positions = positions;
-        console.log('📋 Positions loaded:', positions);
       });
 
     this.store.select(PositionState.treeNodes)
@@ -141,7 +140,7 @@ export class PositionTreeComponent implements OnInit, OnDestroy {
       .subscribe(error => {
         this.error = error;
         if (error) {
-          this.msg.error(error);
+          this.message.error(error); // Remove the options object
         }
       });
 
@@ -158,65 +157,46 @@ export class PositionTreeComponent implements OnInit, OnDestroy {
   }
 
   onNodeClick(event: any) {
-    console.log('🖱️ Node clicked event:', event);
-    
     if (!event?.node) {
-      console.error('❌ No node in event');
       return;
     }
 
     const node = event.node;
     const key = node.key;
-    console.log('🔑 Looking for position with key:', key);
 
     const foundPosition = this.positions.find(p => {
       const positionId = typeof p.id === 'string' ? p.id : p.id.toString();
       return positionId === key;
     });
 
-    console.log('🔍 Found position:', foundPosition);
-
     if (foundPosition) {
       this.selectedPosition = { ...foundPosition };
       this.isNew = false;
       this.openDrawer();
-    } else {
-      console.error('❌ Position not found for key:', key);
-      this.msg.error('Position not found');
     }
   }
 
   openCreate() {
-    console.log('🆕 Opening create form');
     this.selectedPosition = null;
     this.isNew = true;
     this.openDrawer();
   }
 
   openDrawer() {
-    console.log('🚪 Opening drawer with:', {
-      selectedPosition: this.selectedPosition,
-      isNew: this.isNew
-    });
     this.drawerVisible = true;
   }
 
   closeDrawer() {
-    console.log('🚪 Closing drawer');
     this.drawerVisible = false;
     this.selectedPosition = null;
   }
 
   onSaved() {
-    console.log('✅ Position saved');
-    this.msg.success('Position saved successfully');
     this.closeDrawer();
     this.load(); 
   }
 
   onDeleted() {
-    console.log('🗑️ Position deleted');
-    this.msg.success('Position deleted successfully');
     this.closeDrawer();
     this.load();
   }

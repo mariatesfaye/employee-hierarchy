@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 
@@ -9,5 +9,5 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
   templateUrl: './app.component.html',
 })
 export class AppComponent {
-  title = 'perago-employee';
+  title = signal('Perago Employee Hierarchy');
 }

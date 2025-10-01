@@ -2,7 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-/* NG-ZORRO customizations */
+.ant-message {
+  top: auto !important;
+  bottom: 20px !important;
+}
+
+.ant-message .ant-message-notice {
+  text-align: right;
+}
+
 .ant-tree-node-content-wrapper {
   @apply transition-all duration-200 rounded-lg mx-1;
 }

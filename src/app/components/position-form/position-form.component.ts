@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, input, output, effect, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
@@ -8,6 +8,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { CreatePosition, UpdatePosition, DeletePositionWithChildren } from '../../store/position.state';
 
 @Component({
@@ -22,18 +23,18 @@ import { CreatePosition, UpdatePosition, DeletePositionWithChildren } from '../.
     NzButtonModule,
     NzModalModule
   ],
-  template: `<div class="p-2">
-  <form [formGroup]="form" (ngSubmit)="save()" class="space-y-6">
+  template: `<div class="p-4">
+  <form [formGroup]="form" (ngSubmit)="save()" class="space-y-4">
 
     <div class="space-y-2">
-      <label class="block text-sm font-semibold text-gray-700">
+      <label class="block text-sm font-medium text-gray-700">
         Position Name <span class="text-red-500">*</span>
       </label>
       <input 
         nz-input 
         formControlName="name" 
         placeholder="e.g., Senior Developer"
-        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" />
+        class="w-full px-3 py-2 border border-gray-300 rounded focus:border-blue-500" />
       <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="text-red-500 text-sm">
         <div *ngIf="form.get('name')?.errors?.['required']">Position name is required</div>
         <div *ngIf="form.get('name')?.errors?.['minlength']">Minimum 2 characters required</div>
@@ -41,17 +42,17 @@ import { CreatePosition, UpdatePosition, DeletePositionWithChildren } from '../.
     </div>
 
     <div class="space-y-2">
-      <label class="block text-sm font-semibold text-gray-700">Description</label>
+      <label class="block text-sm font-medium text-gray-700">Description</label>
       <textarea 
         nz-input 
         formControlName="description" 
         rows="3"
         placeholder="Optional position description..."
-        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none"></textarea>
+        class="w-full px-3 py-2 border border-gray-300 rounded focus:border-blue-500 resize-none"></textarea>
     </div>
 
     <div class="space-y-2">
-      <label class="block text-sm font-semibold text-gray-700">Parent Position</label>
+      <label class="block text-sm font-medium text-gray-700">Parent Position</label>
       <nz-select 
         formControlName="parentId" 
         nzAllowClear 
@@ -59,36 +60,36 @@ import { CreatePosition, UpdatePosition, DeletePositionWithChildren } from '../.
         nzPlaceHolder="Select parent position"
         class="w-full">
         <nz-option 
-          *ngFor="let option of getParentOptions()" 
+          *ngFor="let option of parentOptions()" 
           [nzValue]="option.id" 
           [nzLabel]="option.label">
         </nz-option>
       </nz-select>
-      <p class="text-xs text-gray-500 italic">Select where this position fits in the organization hierarchy</p>
+      <p class="text-xs text-gray-500">Select where this position fits in the organization hierarchy</p>
     </div>
 
-    <div class="flex justify-between items-center pt-6 border-t border-gray-100">
-      <div class="flex gap-3">
+    <div class="flex justify-between items-center pt-4 border-t border-gray-200">
+      <div class="flex gap-2">
         <button 
           nz-button 
           nzType="primary" 
           [disabled]="loading || form.invalid"
           [nzLoading]="loading"
           type="submit"
-          class="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50 disabled:transform-none">
-          {{ isNew ? 'Create Position' : 'Update Position' }}
+          class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded">
+          {{ isNew() ? 'Create Position' : 'Update Position' }}
         </button>
         <button 
           nz-button 
           type="button" 
           (click)="cancel()"
           [disabled]="loading"
-          class="px-6 py-2 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-all duration-200">
+          class="px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded hover:bg-gray-50">
           Cancel
         </button>
       </div>
 
-      <div *ngIf="showDeleteButton">
+      <div *ngIf="showDeleteButton()">
         <button 
           nz-button 
           nzType="default" 
@@ -96,45 +97,58 @@ import { CreatePosition, UpdatePosition, DeletePositionWithChildren } from '../.
           (click)="confirmDelete()"
           [disabled]="loading"
           type="button"
-          class="px-6 py-2 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200">
+          class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded">
           Delete
         </button>
       </div>
     </div>
 
   </form>
-</div>`,
+</div>`
 })
-export class PositionFormComponent implements OnChanges {
-  @Input() position: Position | null = null;
-  @Input() allPositions: Position[] = [];
-  @Input() isNew: boolean = false;
+export class PositionFormComponent {
+  position = input<Position | null>(null);
+  allPositions = input<Position[]>([]);
+  isNew = input<boolean>(false);
 
-  @Output() saved = new EventEmitter<void>();
-  @Output() deleted = new EventEmitter<void>();
-  @Output() cancelled = new EventEmitter<void>();
+  saved = output<void>();
+  deleted = output<void>();
+  cancelled = output<void>();
 
   form!: FormGroup;
   loading = false;
 
+  showDeleteButton = computed(() => !this.isNew() && !!this.position()?.id);
+  
+  parentOptions = computed(() => {
+    const options: { id: number | null; label: string }[] = [
+      { id: null, label: '🏢 No Parent (Root Level)' }
+    ];
+
+    this.allPositions()
+      .filter(p => p.id !== this.position()?.id)
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .forEach(position => {
+        options.push({
+          id: position.id,
+          label: position.name
+        });
+      });
+
+    return options;
+  });
+
   constructor(
     private fb: FormBuilder,
     private store: Store,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private message: NzMessageService
   ) {
     this.buildForm();
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log('🔄 Form Input Changes:', {
-      position: this.position,
-      isNew: this.isNew,
-      changes: changes
-    });
-
-    if (changes['position'] || changes['isNew']) {
+    
+    effect(() => {
       this.patchForm();
-    }
+    });
   }
 
   private buildForm(): void {
@@ -143,7 +157,6 @@ export class PositionFormComponent implements OnChanges {
       description: [''],
       parentId: [null]
     });
-    console.log('📝 Form built with initial values:', this.form.value);
   }
 
   private patchForm(): void {
@@ -151,30 +164,18 @@ export class PositionFormComponent implements OnChanges {
       this.buildForm();
     }
 
+    const currentPosition = this.position();
     const formData = {
-      name: this.position?.name || '',
-      description: this.position?.description || '',
-      parentId: this.position?.parentId ?? null
+      name: currentPosition?.name || '',
+      description: currentPosition?.description || '',
+      parentId: currentPosition?.parentId ?? null
     };
 
-    console.log('📝 Patching form with data:', formData);
-    console.log('📝 Current position:', this.position);
-
     this.form.patchValue(formData, { emitEvent: false });
-
-    setTimeout(() => {
-      console.log('📝 Form values after patch:', this.form.value);
-      console.log('📝 Form valid:', this.form.valid);
-    }, 0);
   }
 
   save(): void {
-    console.log('💾 Save button clicked');
-    console.log('📝 Form values:', this.form.value);
-    console.log('📝 Form valid:', this.form.valid);
-
     if (this.form.invalid) {
-      console.log('❌ Form is invalid, marking fields as touched');
       this.markFormGroupTouched();
       return;
     }
@@ -182,11 +183,9 @@ export class PositionFormComponent implements OnChanges {
     this.loading = true;
     const formValue = this.form.value;
 
-    if (this.isNew) {
-      console.log('🆕 Creating new position');
+    if (this.isNew()) {
       this.createPosition(formValue);
     } else {
-      console.log('🔄 Updating existing position');
       this.updatePosition(formValue);
     }
   }
@@ -198,61 +197,58 @@ export class PositionFormComponent implements OnChanges {
       parentId: formValue.parentId
     };
 
-    console.log('📤 Create payload:', payload);
-
     this.store.dispatch(new CreatePosition(payload)).subscribe({
       next: () => {
-        console.log('✅ Create successful');
         this.loading = false;
+        this.message.success('Position created successfully!');
         this.saved.emit();
       },
       error: (error) => {
-        console.error('❌ Create error:', error);
+        console.error('Create error:', error);
         this.loading = false;
+        this.message.error('Failed to create position');
       }
     });
   }
 
   private updatePosition(formValue: any): void {
-    if (!this.position?.id) {
-      console.error('❌ Cannot update: No position ID');
+    const currentPosition = this.position();
+    if (!currentPosition?.id) {
+      console.error('Cannot update: No position ID');
       this.loading = false;
       return;
     }
 
     const payload: Position = {
-      id: this.position.id,
+      id: currentPosition.id,
       name: formValue.name.trim(),
       description: formValue.description?.trim() || '',
       parentId: formValue.parentId
     };
 
-    console.log('📤 Update payload:', payload);
-
     this.store.dispatch(new UpdatePosition(payload)).subscribe({
       next: () => {
-        console.log('✅ Update successful');
         this.loading = false;
+        this.message.success('Position updated successfully!');
         this.saved.emit();
       },
       error: (error) => {
-        console.error('❌ Update error:', error);
+        console.error('Update error:', error);
         this.loading = false;
+        this.message.error('Failed to update position');
       }
     });
   }
 
   confirmDelete(): void {
-    if (!this.position?.id) {
-      console.log('❌ Cannot delete: No position selected');
+    const currentPosition = this.position();
+    if (!currentPosition?.id) {
       return;
     }
 
-    console.log('🗑️ Confirm delete for:', this.position);
-
     this.modal.confirm({
       nzTitle: 'Delete Position?',
-      nzContent: `Are you sure you want to delete "${this.position.name}"? This will also delete all positions under it.`,
+      nzContent: `Are you sure you want to delete "${currentPosition.name}"? This will also delete all positions under it.`,
       nzOkText: 'Yes, Delete',
       nzOkType: 'primary',
       nzOkDanger: true,
@@ -262,29 +258,27 @@ export class PositionFormComponent implements OnChanges {
   }
 
   private performDelete(): void {
-    if (!this.position?.id) {
-      console.log('❌ Cannot delete: No position ID');
+    const currentPosition = this.position();
+    if (!currentPosition?.id) {
       return;
     }
 
-    console.log('🗑️ Performing delete for:', this.position.id);
     this.loading = true;
-
-    this.store.dispatch(new DeletePositionWithChildren(this.position.id)).subscribe({
+    this.store.dispatch(new DeletePositionWithChildren(currentPosition.id)).subscribe({
       next: () => {
-        console.log('✅ Delete successful');
         this.loading = false;
+        this.message.success('Position deleted successfully!');
         this.deleted.emit();
       },
       error: (error) => {
-        console.error('❌ Delete error:', error);
+        console.error('Delete error:', error);
         this.loading = false;
+        this.message.error('Failed to delete position');
       }
     });
   }
 
   cancel(): void {
-    console.log('🚫 Cancel clicked');
     this.cancelled.emit();
   }
 
@@ -296,34 +290,5 @@ export class PositionFormComponent implements OnChanges {
         control.updateValueAndValidity();
       }
     });
-  }
-
-  get showDeleteButton(): boolean {
-    const shouldShow = !this.isNew && !!this.position?.id;
-    console.log('🔍 Delete button should show:', shouldShow, {
-      isNew: this.isNew,
-      hasPosition: !!this.position,
-      positionId: this.position?.id
-    });
-    return shouldShow;
-  }
-
-  getParentOptions(): { id: number | null; label: string }[] {
-    const options: { id: number | null; label: string }[] = [
-      { id: null, label: '🏢 No Parent (Root Level)' }
-    ];
-
-    this.allPositions
-      .filter(p => p.id !== this.position?.id)
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .forEach(position => {
-        options.push({
-          id: position.id,
-          label: position.name
-        });
-      });
-
-    console.log('📋 Parent options:', options);
-    return options;
   }
 }
